@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+        }
+
+        /* 🔥 Top Section */
+        .hero {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        /* 🔥 Cards */
+        .card-custom {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-8px);
+        }
+
+        /* 🔥 Stats */
+        .stat {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* 🔥 Buttons */
+        .btn-main {
+            background: white;
+            color: #4f46e5;
+            border-radius: 12px;
+        }
+
+        .btn-main:hover {
+            background: #e0e7ff;
+        }
+
+        /* 🔥 Chart */
+        .chart-card {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+
+
+        /* 🔥 Hero Card */
+.hero-card {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(99,102,241,0.3);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🔥 Glow effect */
+.hero-card::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+    top: -50%;
+    left: -50%;
+    transform: rotate(25deg);
+}
+
+/* 🔥 3D Hover */
+.hero-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 80px rgba(99,102,241,0.5);
+}
+
+/* 🔥 Button */
+.btn-main {
+    background: white;
+    color: #4f46e5;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-main:hover {
+    transform: scale(1.1);
+    background: #e0e7ff;
+}
+
+/* 🔥 Text animation */
+.hero-card h2 {
+    animation: fadeUp 0.8s ease;
+}
+
+.hero-card p {
+    animation: fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+        /* 🔥 Table */
+        .table {
+            background: white;
+            border-radius: 12px;
+        }
+
+    .card-custom table {
+    max-height: 250px;
+    overflow-y: auto;
+    display: block;
+}
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold">ECE Smart</a>
+
+            <!-- Toggle for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- Left side -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/">Dashboard</a>
+                    </li>
+                </ul>
+
+                <!-- Right side -->
+                <ul class="navbar-nav">
+
+                    <!-- Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            👤 Profile
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            {% if user.is_authenticated %}
+                            <li><span class="dropdown-item-text">Hi, {{ user.username }}</span></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/profile/">Profile</a></li>
+                            <li><a class="dropdown-item text-danger" href="/logout/">Logout</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="/login/">Login</a></li>
+                            <li><a class="dropdown-item" href="/signup/">Sign Up</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+<div class="container mt-5">
+
+   <div class="hero-card mb-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <div>
+            <h2 class="mb-2">👋 Welcome, {{ user.username }}</h2>
+            <p class="text-muted mb-0">
+                Track your performance and improve your skills 🚀
+            </p>
+        </div>
+
+        <a href="/test/" class="btn btn-main mt-3 mt-md-0">
+            Start New Test
+        </a>
+
+    </div>
+
+</div>
+
+    <!-- 🔥 STATS -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card-custom text-center">
+                <h6>Total Tests</h6>
+                <div class="stat">{{ total_tests }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom text-center">
+                <h6>Average</h6>
+                <div class="stat">{{ avg_score }}%</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom text-center">
+                <h6>Best</h6>
+                <div class="stat">{{ best_score }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+    <!-- 🔥 CHART (LEFT) -->
+    <div class="col-md-8 mb-4">
+        <div class="chart-card h-100">
+            <h5>📈 Performance Trend</h5>
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+
+    <!-- 🔥 HISTORY (RIGHT) -->
+<div class="col-md-4 mb-4">
+    <div class="card-custom h-100">
+        <h5>📜 Recent Tests</h5>
+
+        {% if results %}
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Score</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for r in results %}
+                <tr>
+                    <td>{{ r.created_at|date:"M d, Y" }}</td>
+                    <td>{{ r.score }}/{{ r.total }}</td>
+                    <td>
+                        <a href="{% url 'view_result' r.id %}" 
+                           class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+             <form method="POST" action="/delete-result/{{ r.id }}/" style="display:inline;">
+    {% csrf_token %}
+    <button class="btn btn-sm btn-danger">Delete</button>
+</form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No tests yet</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 🔥 Chart -->
+<script>
+    new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: "Score %",
+                data: {{ chart_data|safe }},
+                borderWidth: 3,
+                tension: 0.4,
+                borderColor: "#6366f1",
+                backgroundColor: "rgba(99,102,241,0.2)"
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>
