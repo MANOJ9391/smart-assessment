@@ -1,4 +1,5 @@
 import random
+import json
 from django.shortcuts import render, redirect
 from .models import Question, Result, Profile
 from django.contrib.auth import authenticate, login, logout
@@ -126,7 +127,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('login')
 
 
 
@@ -178,8 +179,8 @@ def dashboard(request):
         'total_tests': total_tests,
         'avg_score': round(avg_score, 1),
         'best_score': best_score,
-        'chart_data': chart_data,
-        'labels': labels
+        'chart_data': json.dumps(chart_data),
+        'labels': json.dumps(labels)
     })
 
 
