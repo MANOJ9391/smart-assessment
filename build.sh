@@ -3,9 +3,15 @@
 pip install -r requirements.txt
 python manage.py migrate
 
-# 🔥 create superuser automatically
-echo "from django.contrib.auth.models import User; 
-User.objects.filter(username='admin').exists() or 
-User.objects.create_superuser('admin','admin@gmail.com','admin123')" | python manage.py shell
+# 🔥 FORCE create/update superuser
+echo "
+from django.contrib.auth import get_user_model
+User = get_user_model()
+user, created = User.objects.get_or_create(username='admin')
+user.set_password('admin123')
+user.is_superuser = True
+user.is_staff = True
+user.save()
+" | python manage.py shell
 
 python manage.py collectstatic --noinput
